@@ -6,14 +6,27 @@ import { AuthContext } from "./context/AuthProvider";
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const authData = useContext(AuthContext);
+  console.log(authData);
 
   function handleLogin(email, password) {
-    if (email == "admin@me.com" && password == "123") {
-      setUser("admin");
-    } else if (email == "user@me.com" && password == "123") {
-      setUser("user");
+    if (authData) {
+      if (
+        authData.admin &&
+        email == authData.admin[0].email &&
+        password == authData.admin[0].password
+      ) {
+        setUser("admin");
+      } else if (
+        authData.emp &&
+        authData.emp.find((e) => e.email == email && e.password == password)
+      ) {
+        setUser("user");
+      } else {
+        alert("invalid creds");
+      }
     } else {
-      alert("invalid creds");
+      alert("no user found");
     }
   }
 
