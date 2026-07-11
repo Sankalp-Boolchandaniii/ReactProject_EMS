@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = () => {
+const Header = ({ loggedInUserData }) => {
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
     window.location.reload();
@@ -10,7 +10,9 @@ const Header = () => {
     <div className="flex items-end justify-between">
       <h1 className="text-2xl font-medium">
         Hello <br />
-        <span className="text-3xl font-semibold">Sankalp 👋</span>
+        <span className="text-3xl font-semibold">
+          {loggedInUserData.firstName} 👋
+        </span>
       </h1>
       <button
         onClick={handleLogout}
