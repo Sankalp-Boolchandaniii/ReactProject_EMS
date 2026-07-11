@@ -6,8 +6,16 @@ import { AuthContext } from "./context/AuthProvider";
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [loggedInUserData, setLoggedInUserData] = useState(null);
   const authData = useContext(AuthContext);
   console.log(authData);
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    if (loggedInUser) {
+      setUser(loggedInUser.role);
+    }
+  }, [authData]);
 
   function handleLogin(email, password) {
     if (authData) {
@@ -17,11 +25,22 @@ const App = () => {
         password == authData.admin[0].password
       ) {
         setUser("admin");
-      } else if (
-        authData.emp &&
-        authData.emp.find((e) => e.email == email && e.password == password)
-      ) {
-        setUser("user");
+        localStorage.setItem(
+          "loggedInUser",
+          JSON.stringify({ role: "admin", role: authData.admin[0] }),
+        );
+      } else if (authData.emp) {
+        const emp = authData.emp.find(
+          (e) => e.email == email && e.password == password,
+        );
+        if (emp) {
+          setLoggedInUserData(emp);
+          setUser("employee");
+          localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify({ role: "employee", data: emp }),
+          );
+        }
       } else {
         alert("invalid creds");
       }
@@ -33,7 +52,11 @@ const App = () => {
   return (
     <>
       {!user ? <Login handleLogin={handleLogin} /> : ""}
-      {user == "admin" ? <AdminDashboard /> : <EmployeeDashboard />}
+      {user == "admin" ? (
+        <AdminDashboard />
+      ) : user == "employee" ? (
+        <EmployeeDashboard loggedInUserData={loggedInUserData} />
+      ) : null}
     </>
   );
 };
