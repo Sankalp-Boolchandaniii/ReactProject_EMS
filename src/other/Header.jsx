@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const Header = ({ loggedInUserData }) => {
+const Header = (props) => {
   const [name, setName] = useState(null);
 
   useEffect(() => {
@@ -9,13 +9,14 @@ const Header = ({ loggedInUserData }) => {
     if (loggedInUser.role == "admin") {
       setName("Admin");
     } else {
-      setName(loggedInUserData.firstName);
+      setName(props.loggedInUserData.firstName);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
-    window.location.reload();
+    // window.location.reload();
+    props.setUser("");
   };
 
   return (
