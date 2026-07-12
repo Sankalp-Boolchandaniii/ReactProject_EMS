@@ -29,7 +29,7 @@ const App = () => {
         setUser("admin");
         localStorage.setItem(
           "loggedInUser",
-          JSON.stringify({ role: "admin", role: authData.admin[0] }),
+          JSON.stringify({ role: "admin", data: authData.admin[0] }),
         );
       } else if (authData.emp) {
         const emp = authData.emp.find(
